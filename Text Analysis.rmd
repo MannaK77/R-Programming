@@ -136,7 +136,6 @@ wordcloud(sentDat$myNames ,freq = sentDat$v, colors = sentDat$my.colors, random.
 legend(-.4, .4, c("Positive","Neutral","Negative"), col = c(3 ,1 ,2), lty = 1, ncol = 1, lwd = 5, cex = 1.1 , bty ="n", text.font = 3)
 ```
 
-#The speech is mostly positive, Abraham Lincoln used words which convey positive meaning in his proclamation speech, with occassional words which are looking negative but may not be negative in the overall context. 
 
 
 
