@@ -1,0 +1,83 @@
+---
+title: "Project 3 Supervised Learning"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+Initial setup (add cleaning / tidying if necessary)
+
+```{r}
+library(randomForest)
+library(rpart)
+library(partykit)
+library(caret)
+sal <- read.csv("/cloud/project/Salaries.csv") 
+sal<- na.omit(sal)
+```
+Split data into training and test data.
+
+```{r}
+set.seed(8675309) 
+train_index <- createDataPartition(sal$salary, p=.9, list = FALSE)   # caret functions
+
+  train_data <- sal[train_index,]   # Training Data
+   test_data <- sal[-train_index,]  # Test Data
+```
+
+**CART**
+
+```{r}
+set.seed(8675309) 
+salary.ct <- rpart (salary ~ ., data = train_data)
+salary.ct.party <- as.party(salary.ct)
+plot (salary.ct.party)
+```
+Generate predictions for our hold-out testing data and compare to actual with a plot and correlation
+
+```{r}
+predictions.ct <- predict(salary.ct, test_data)
+plot(predictions.ct,test_data$salary)    # compare to actual value
+cor(predictions.ct,test_data$salary)
+```
+
+**Bagging**
+```{r}
+   set.seed(8675309)
+   salary.bg <- randomForest(salary ~ ., data=train_data, mtry=ncol(sal)-1, importance=TRUE, na.action=na.omit)
+   print(salary.bg)
+   round(importance(salary.bg), 2)   # Variable Importance
+   varImpPlot(salary.bg)
+```
+Generate predictions for our hold-out testing data and compare to actual with a plot and correlation
+
+```{r}
+predictions.bg <- predict(salary.bg, test_data)
+plot(predictions.bg,test_data$salary)    # compare to actual value
+cor(predictions.bg,test_data$salary)
+```
+
+**Random Forest**
+Note: Default values of mtry = sqrt(p) Classification
+                             = p/3     Regression
+where p is number of explanatory variables
+```{r}
+   set.seed(8675309)
+   salary.rf <- randomForest(salary ~ ., data=train_data, mtry=3, importance=TRUE, na.action=na.omit)
+   print(salary.rf)
+   round(importance(salary.rf), 2)   # Variable Importance
+   varImpPlot(salary.rf)
+```
+Generate predictions for our hold-out testing data and compare to actual with a plot and correlation
+
+```{r}
+predictions.rf <- predict(salary.rf, test_data)
+plot(predictions.rf,test_data$salary)    # compare to actual value
+cor(predictions.rf,test_data$salary)
+```
+
+
+
+
+
