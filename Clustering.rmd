@@ -1,0 +1,88 @@
+---
+title: "Project 4, Bus. 744, Unsupervised Learning"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+1. Select a dataset of interest and perform a cluster analysis of your data for 2, 3, 4, 5, 6, 7 clusters using either k-means or hierarchical clustering 
+
+```{r}
+library(cluster)
+library(datasets)
+usage<- read.csv("/cloud/project/usage.csv") 
+
+# Hierarchical (2 cluster only)
+   avW <- agnes(usage[,2:3], method ="ward", stand = TRUE )
+   h2 <- cutree(as.hclust(avW), k = 2)# Cut into 2 groups
+   h3 <- cutree(as.hclust(avW), k = 3)
+   h4 <- cutree(as.hclust(avW), k = 4)
+   h5 <- cutree(as.hclust(avW), k = 5)
+   h6 <- cutree(as.hclust(avW), k = 6)
+   h7 <- cutree(as.hclust(avW), k = 7)
+   
+# k-means (2 cluster only)
+  # k2 <- kmeans(usage[,2:3], 2, algorithm ="MacQueen")
+```
+
+2. Evaluate each partition above by creating a Silhouette plot.
+```{r}
+# Hierarchical Cluster Silhoutte Plot
+   siH2 <- silhouette (h2, daisy(usage[,2:3]))
+   plot (siH2 , main ="Silhouette Plot Hierarchical", col =" blue ")
+   siH3 <- silhouette (h3, daisy(usage[,2:3]))
+   plot (siH3 , main ="Silhouette Plot Hierarchical", col =" blue ")
+   siH4 <- silhouette (h4, daisy(usage[,2:3]))
+   plot (siH4 , main ="Silhouette Plot Hierarchical", col =" blue ")
+   siH5 <- silhouette (h5, daisy(usage[,2:3]))
+   plot (siH5 , main ="Silhouette Plot Hierarchical", col =" blue ")
+   siH6 <- silhouette (h6, daisy(usage[,2:3]))
+   plot (siH6 , main ="Silhouette Plot Hierarchical", col =" blue ")
+   siH7 <- silhouette (h7, daisy(usage[,2:3]))
+   plot (siH7 , main ="Silhouette Plot Hierarchical", col =" blue ")
+  
+   # k-means Cluster Silhoutte Plot
+   #siK2 <- silhouette (k2$cluster, daisy(faithful[,1:2]))
+  # plot (siK2 , main ="Silhouette Plot k-means", col =" blue ")
+```
+
+3. Choose an optimal solution based on your results in step (3).
+
+From the silhouette plot, the optimal solution is 6 clusters, as Silhouette width got better which means that most of the observations are well matched with cluster when they are divided into 6 clusters.
+
+4. Profile each cluster from your optimal solution using graphical depictions, summary numbers, etc. and give an intuitive description of each cluster
+
+```{r}
+library(psych)
+
+# Hierarchical
+  hierarchDat <- cbind(usage[,2:3],group=h6)
+  describeBy(hierarchDat, hierarchDat$group) 
+
+# k-means
+ # kMeansDat <- cbind(faithful,group=k2$cluster)
+ # describeBy(kMeansDat, kMeansDat$group) 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
